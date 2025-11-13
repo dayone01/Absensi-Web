@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Absensi Siswa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input, select {
+      background: #fff;
+      color: #000;
+    }
+
+    button {
+      background: #00C853;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #009624;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    #realtime {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #ffeb3b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Halaman Login -->
+  <div class="container" id="loginPage">
+    <h2>Login Absensi</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Konfirmasi</button>
+  </div>
+
+  <!-- Halaman Form Absensi -->
+  <div class="container" id="absensiPage" style="display:none;">
+    <h2>Form Absensi</h2>
+    <div id="realtime">Waktu sekarang: --:--:--</div>
+
+    <form id="absensiForm">
+      <input type="text" name="NAMA SISWA" placeholder="Nama Siswa" required>
+      <input type="text" name="KELAS" placeholder="Kelas" required>
+      <input type="date" name="TANGGAL" required>
+
+      <select name="KETERANGAN" required>
+        <option value="" disabled selected>Pilih Keterangan</option>
+        <option value="Hadir">Hadir</option>
+        <option value="Sakit">Sakit</option>
+        <option value="Izin">Izin</option>
+      </select>
+
+      <button type="submit">Konfirmasi</button>
+    </form>
+  </div>
+
+  <script>
+    // 🔐 Login sederhana
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user === "Dayone" && pass === "Dayone123") {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('absensiPage').style.display = 'block';
+      } else {
+        alert("Username atau Password salah!");
+      }
+    }
+
+    // ⏰ Realtime Clock (WIB)
+    function updateClock() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Jakarta', hour12: false };
+      const timeString = now.toLocaleTimeString('id-ID', options);
+      document.getElementById('realtime').textContent = "Waktu sekarang: " + timeString + " WIB";
+    }
+    setInterval(updateClock, 1000);
+
+    // 🔗 Link ke Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxPKDw471vbV7bCYhH8Vf3dUATZXNrW7ePLzYLrorsJv51QifJJ48BbNkDKd8f-MIVe/exec';
+    const form = document.getElementById("absensiForm");
+
+    // 🚀 Kirim data ke Google Sheet
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => alert("✅ Data absensi berhasil dikirim!"))
+        .catch(error => alert("❌ Gagal mengirim data: " + error.message));
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>
